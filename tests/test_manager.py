@@ -1,7 +1,7 @@
 import os
 import shutil
 import unittest
-from imgman import manager
+from imgman import ImageManager
 
 class TestImageManager(unittest.TestCase):
 
@@ -16,7 +16,7 @@ class TestImageManager(unittest.TestCase):
         extensions = ["png", "jpg", "bmp"]
         expected = sorted([os.path.join(path, f) for f in file_names if f.endswith(tuple(extensions))])
 
-        imanager = manager.ImageManager()
+        imanager = ImageManager()
 
         # create tmp dir
         os.mkdir(path)
@@ -39,7 +39,7 @@ class TestImageManager(unittest.TestCase):
         file_names = ["test.png", "test.jpg", "hi.txt", "hill.jpeg", "me.bmp"]
         extensions = ["png", "jpg", "bmp"]
 
-        imanager = manager.ImageManager()
+        imanager = ImageManager()
 
         # create tmp dirs
         os.mkdir(src_path)

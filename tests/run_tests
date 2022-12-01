@@ -1,0 +1,12 @@
+#!/bin/bash
+
+# temporarily hardcoded
+working_dir="/home/chris/Projects/imgman"
+log_file="test_logs.txt"
+
+source "$working_dir/.venv/bin/activate"
+
+time=$(timedatectl | grep "Universal time" | sed 's/^ *//g')
+
+echo $time >> "$log_file"
+python test_manager.py &>> "$log_file"
