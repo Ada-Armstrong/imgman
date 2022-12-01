@@ -9,4 +9,4 @@ source "$working_dir/.venv/bin/activate"
 time=$(timedatectl | grep "Universal time" | sed 's/^ *//g')
 
 echo $time >> "$log_file"
-python test_manager.py &>> "$log_file"
+python "$working_dir/tests/test_manager.py" &>> "$log_file"
