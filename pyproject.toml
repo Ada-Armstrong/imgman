@@ -1,0 +1,20 @@
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[project]
+name = "imgman"
+version = "0.1"
+authors = [
+    {name="Christopher Armstrong", email="christopherada.a@gmail.com" },
+]
+description = "A simple image management tool"
+readme = "README.md"
+requires-python = ">=3.10"
+classifiers = [
+    "Programming Language :: Python :: 3",
+]
+
+[project.urls]
+"Homepage" = "https://github.com/Ada-Armstrong/imgman"
+"Bug Tracker" = "https://github.com/Ada-Armstrong/imgman/issues"

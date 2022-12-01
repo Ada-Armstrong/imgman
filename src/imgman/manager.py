@@ -25,7 +25,7 @@ class ImageManager:
         """
         Returns a list of file names with the given extensions in directories.
         """
-        if isinstance(directories) is str:
+        if isinstance(directories, str):
             directories = [directories]
         self.logger.info(f"Searching for files with extensions: {file_extensions} in {directories}")
 
