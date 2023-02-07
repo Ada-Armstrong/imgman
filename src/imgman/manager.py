@@ -84,7 +84,10 @@ class ImageManager:
 
         for fname in self._progress(imgs):
             date = self.get_date_taken(fname)
-            year_month = date.split()[0][:-3] if date and len(date) >= 4 else "None"
+            try:
+                year_month = date.split()[0][:-3] if date and len(date) >= 4 else "None"
+            except:
+                self.logger.warn(f"ERROR w/ {fname}")
             part[year_month].append(fname)
 
         self.logger.info(f"Partitioned imgs into {list(part.keys())}")
@@ -101,7 +104,7 @@ class ImageManager:
         Return the EXIF DateTime the picture was taken.
         """
         exif = self.get_exif(path)
-        return exif['DateTime'] if 'DateTime' in exif else None
+        return exif['DateTime'].replace(":", "-") if 'DateTime' in exif else None
 
     def load_hashes(self, imgs):
         """
