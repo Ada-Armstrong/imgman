@@ -38,8 +38,12 @@ def main():
     logging.getLogger("ImageManager").setLevel(logging.DEBUG)
 
     # load hashes of any existing images from the dst_dir
-    exisiting_imgs = manager.find(args.dst_dir, recursive=True, file_extensions=img_extensions)
-    manager.load_hashes(exisiting_imgs)
+    try:
+        exisiting_imgs = manager.find(args.dst_dir, use_file=True, recursive=True, file_extensions=img_extensions)
+    except:
+        # we failed to find a hash file so load them manually
+        exisiting_imgs = manager.find(args.dst_dir, use_file=False, recursive=True, file_extensions=img_extensions)
+        manager.load_hashes(exisiting_imgs)
 
     # collect new images and remove any duplicates
     imgs = manager.find(args.src_dir, recursive=True, file_extensions=img_extensions)
@@ -47,7 +51,7 @@ def main():
 
     # partition by year and month and copy to dst_dir
     partition = manager.partition(imgs)
-    manager.copy(partition, args.dst_dir)
+    manager.copy(partition, args.dst_dir, save_hashes=True)
 
 if __name__ == "__main__":
     main()
