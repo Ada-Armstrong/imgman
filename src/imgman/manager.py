@@ -1,6 +1,7 @@
 import logging
 import shutil
 import imagehash
+import os
 
 from glob import glob
 from tqdm import tqdm
@@ -21,15 +22,22 @@ class ImageManager:
     def _progress(self, iterable):
         return tqdm(iterable) if self.display_loading_bar else iterable
 
-    def find(self, directories, file_extensions=["jpg", "jpeg", "png"]):
+    def find(self, directories, file_extensions=["jpg", "jpeg", "png"], recursive=False):
         """
         Returns a list of file names with the given extensions in directories.
         """
         if isinstance(directories, str):
             directories = [directories]
+
+        if recursive:
+            out = []
+            for directory in directories:
+                out.extend([x[0] for x in os.walk(directory)])
+            directories = out
+
         self.logger.info(f"Searching for files with extensions: {file_extensions} in {directories}")
 
-        return [f for d in directories for ext in file_extensions for f in glob(f'{d}/*.{ext}')]
+        return [f for d in directories for ext in file_extensions for f in glob(f"{d}/*.{ext}")]
 
     def copy(self, imgs, directory, move=False):
         """
@@ -37,7 +45,7 @@ class ImageManager:
         a valid dir. If imgs is a dictionary the keys are used as the destination
         directories with the directory argument prepended.
         """
-        if not isinstance(imgs, list) or isinstance(imgs, dict):
+        if not (isinstance(imgs, list) or isinstance(imgs, defaultdict)):
             raise TypeError("imgs must be a list or a dict")
 
         msg = f"imgs to {directory}"
@@ -54,9 +62,16 @@ class ImageManager:
             for img in self._progress(imgs):
                 func(img, directory)
         else:
-            for d in self._progress(imgs.values()):
+            for d in self._progress(imgs.keys()):
+                dest_path = f"{directory}{d}"
+                try:
+                    os.mkdir(dest_path)
+                except:
+                    # dir already exists
+                    pass
                 for img in imgs[d]:
-                    func(img, f"{directory}/{d}")
+                    name = os.path.basename(img)
+                    func(img, f"{dest_path}/{name}")
 
         self.logger.info("Done " + msg[0].lower() + msg[1:])
 
@@ -69,10 +84,10 @@ class ImageManager:
 
         for fname in self._progress(imgs):
             date = self.get_date_taken(fname)
-            year_month = date.split()[0][:-3] if date else "None"
+            year_month = date.split()[0][:-3] if date and len(date) >= 4 else "None"
             part[year_month].append(fname)
 
-        self.logger.info(f"Partitioned imgs into {part.keys()}")
+        self.logger.info(f"Partitioned imgs into {list(part.keys())}")
         return part
 
     def get_exif(self, path):

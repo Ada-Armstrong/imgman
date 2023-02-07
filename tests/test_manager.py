@@ -5,12 +5,12 @@ from imgman import ImageManager
 
 class TestImageManager(unittest.TestCase):
 
-    def _create_tmp_dir(self, name):
+    def _create_tmp_path(self, name):
         path = os.path.dirname(os.path.realpath(__file__))
         return os.path.join(path, name)
 
     def test_find(self):
-        path = self._create_tmp_dir(self.test_find.__name__)
+        path = self._create_tmp_path(self.test_find.__name__)
 
         file_names = ["test.png", "test.jpg", "hi.txt", "hill.jpeg", "me.bmp"]
         extensions = ["png", "jpg", "bmp"]
@@ -33,8 +33,8 @@ class TestImageManager(unittest.TestCase):
         self.assertEqual(res, expected)
 
     def test_copy(self):
-        src_path = self._create_tmp_dir(self.test_copy.__name__ + "_src")
-        dst_path = self._create_tmp_dir(self.test_copy.__name__ + "_dst")
+        src_path = self._create_tmp_path(self.test_copy.__name__ + "_src")
+        dst_path = self._create_tmp_path(self.test_copy.__name__ + "_dst")
 
         file_names = ["test.png", "test.jpg", "hi.txt", "hill.jpeg", "me.bmp"]
         extensions = ["png", "jpg", "bmp"]

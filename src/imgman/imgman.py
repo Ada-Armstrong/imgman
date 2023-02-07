@@ -1,4 +1,5 @@
 import argparse
+import logging
 from manager import ImageManager
 
 def arguments():
@@ -31,8 +32,12 @@ def main():
     args = arguments()
     manager = ImageManager(display_loading_bar=True)
 
+    # logging
+    logging.basicConfig()
+    logging.getLogger("ImageManager").setLevel(logging.DEBUG)
+
     # load hashes of any existing images from the dst_dir
-    exisiting_imgs = manager.find(args.dst_dir)
+    exisiting_imgs = manager.find(args.dst_dir, recursive=True)
     manager.load_hashes(exisiting_imgs)
 
     # collect new images and remove any duplicates

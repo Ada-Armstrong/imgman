@@ -1,4 +1,5 @@
 #!/bin/bash
+# This script must be run from the source directory of the project.
 
 working_dir="$(pwd)"
 log_file="test_logs.txt"
@@ -15,6 +16,8 @@ ret=$?
 if [ $ret -ne 0 ];
 then
 	cat $log_file
+else
+	echo "All tests passed!"
 fi
 
 exit $ret
