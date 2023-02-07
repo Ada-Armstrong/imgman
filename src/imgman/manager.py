@@ -80,9 +80,20 @@ class ImageManager:
         new_hashes = defaultdict(list)
 
         if isinstance(imgs, list):
+            try:
+                os.mkdir(directory)
+            except:
+                # dir already exists
+                pass
             for img in self._progress(imgs):
                 func(img, directory)
-                new_hashes[self.fname2hash[img]].append(new_path)
+
+            if save_hashes:
+                for img in self._progress(imgs):
+                    name = os.path.basename(img)
+                    new_path = f"{directory}/{name}"
+                    h = self.fname2hash[img] if img in self.fname2hash else self.hash_func(Image.open(img))
+                    new_hashes[h].append(new_path)
         else:
             for d in self._progress(imgs.keys()):
                 dest_path = f"{directory}{d}"
